@@ -7,7 +7,8 @@ var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
 
-
+// const, how many rooms ill provide
+var NUMROOMS = 10;
 
 app.set('port', 5000);
 
@@ -27,8 +28,12 @@ server.listen(5000, function() {
   console.log('Starting server on port 5000');
 });
 
+users = [];
+//for (var i = 0; i < NUMROOMS; i++){
+//	users[i] = [];
+//}
 var clients = 0;
-// Add the WebSocket handlers
+// On connection 
 io.on('connection', function(socket) {
 	
 	// keep count of clients
@@ -43,12 +48,23 @@ io.on('connection', function(socket) {
                 availableRooms.push(room);
             }
         }
-    }
+    }	
 	io.sockets.emit('avail_rooms',{ description: availableRooms});
+	
+	// once room num is specified
 	socket.on('room', function(room) {
 		socket.join(room);
+		io.sockets.in(room).emit('connectToRoom', "You are in room "+room);
+		socket.on('setUsername', function(data) {
+			// Skipping check for repeat names for now, can implement later
+			//if (users[room].indexOf(data) > -1) {
+			users.push(data);
+			io.sockets.in(room).emit('users_here', users);
+			});
+
 	});
-	io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
+	//io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
+	
 	socket.on('disconnect', function () {
 		clients--;
 		io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});

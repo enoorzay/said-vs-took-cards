@@ -36,10 +36,42 @@ function resetContextMenu(){
 	}
 }
 
+function getRoomMenu(){
+	resetContextMenu();
+	var username = "";
+	while (username.length <= 0){
+		
+		username = prompt("Enter nickname: ");
+	}
+	socket.emit('setUsername', username);
+	socket.on('connectToRoom',function(data) {
+		document.getElementById("topbar").innerHTML=data;
+	});
+	var usrlist = document.createElement("list");
+	
+	socket.on('users_here',function(data) {
+		var users_here = data;
+		usrlist.innerHTML = "";
+		var listelements = "";
+		for (var i=0; i < users_here.length;i++){
+			listelements += "<li>" + users_here[i] + "</li>";
+			
+			console.log(users_here[i]);
+		}
+		usrlist.innerHTML = listelements;
+		contextmenu.appendChild(usrlist);
+
+	});
+	
+	
+}
 function selectRoom(){
 	var selected = document.getElementById("Rooms").selectedIndex;
+	var contextmenu = document.getElementById("contextmenu");
 	socket.emit('room', selected);
-	resetContextMenu();
+	getRoomMenu();
+
+		
 }
 
 initMenu();
