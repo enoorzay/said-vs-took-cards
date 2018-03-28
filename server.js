@@ -29,9 +29,9 @@ server.listen(5000, function() {
 });
 
 users = [];
-//for (var i = 0; i < NUMROOMS; i++){
-//	users[i] = [];
-//}
+for (var i = 0; i < NUMROOMS; i++){
+	users[i] = [];
+}
 var clients = 0;
 // On connection 
 io.on('connection', function(socket) {
@@ -58,18 +58,23 @@ io.on('connection', function(socket) {
 		socket.on('setUsername', function(data) {
 			// Skipping check for repeat names for now, can implement later
 			//if (users[room].indexOf(data) > -1) {
-			users.push(data);
-			io.sockets.in(room).emit('users_here', users);
+			
+			users[room].push(data);
+			io.sockets.in(room).emit('users_here', users[room]);
+			
+			// if disconnect
+			socket.on('disconnect', function () {
+				//clients--;
+				var index = users[room].indexOf(data);
+				if (index !== -1){
+					users[room].splice(index, 1);
+					io.sockets.in(room).emit('users_here', users[room]);
+				}
+			//io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
 			});
+		});
 
 	});
-	//io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
-	
-	socket.on('disconnect', function () {
-		clients--;
-		io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
-	});
-	
 });
 
 //test msg
