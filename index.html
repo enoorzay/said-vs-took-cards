@@ -6,12 +6,18 @@
     <title>HTML5 Deck of Cards</title>
     <link href="index.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600|Ubuntu+Condensed" rel="stylesheet" type="text/css">
-	 <script src="/socket.io/socket.io.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+
   </head>
   <body>
+  	<div id="contextmenu">
+	<h4> Available Rooms: </h4> </br>
+	<select id="Rooms" size = 10></select>
+	<button onclick="selectRoom()">Join</button>
+	</div>
     <div id="container"></div>
     <div id="topbar"></div>
-    <script src="dist/deck.js"></script>
-    <script src="static/game.js"></script>
+	<script src="/static/menu.js"></script>
+	</script>
   </body>
 </html>

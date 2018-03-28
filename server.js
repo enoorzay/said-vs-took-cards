@@ -6,6 +6,9 @@ var socketIO = require('socket.io');
 var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
+
+
+
 app.set('port', 5000);
 
 //specifying folders with files we interact with
@@ -23,9 +26,26 @@ server.listen(5000, function() {
   console.log('Starting server on port 5000');
 });
 
-
+var clients = 0;
 // Add the WebSocket handlers
 io.on('connection', function(socket) {
+	clients++;
+	var availableRooms = [];
+    var rooms = io.sockets.adapter.rooms;
+    if (rooms) {
+        for (var room in rooms) {
+            if (!rooms[room].hasOwnProperty(room)) {
+                availableRooms.push(room);
+            }
+        }
+    }
+	io.sockets.emit('avail_rooms',{ description: availableRooms});
+	io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
+	socket.on('disconnect', function () {
+		clients--;
+		io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
+	});
+	
 });
 
 //test msg

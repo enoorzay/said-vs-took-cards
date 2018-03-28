@@ -15,7 +15,15 @@ card.enableFlipping();
 othercard.enableDragging();
 othercard.enableFlipping();
 
+//server io
 var socket = io();
+
+//  Writes # of clients on topbar 
+socket.on('broadcast',function(data) {
+
+	document.getElementById("topbar").innerHTML=data.description;
+});
+
 socket.on('message', function(data) {
   console.log(data);
 });

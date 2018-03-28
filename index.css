@@ -32,6 +32,32 @@ body {
   -ms-transform: translate3d(-50%, -50%, 0);
   transform: translate3d(-50%, -50%, 0);
 }
+#contextmenu {
+  height: 100%;
+  width: 20%;
+  float:right;
+  padding:0.15rem;
+  text-align: right;
+}
+#contextmenu select{
+	float: right;
+	width: 40%;
+	height: 75%;
+	outline: 1px solid black;
+	text-align: center;
+	padding:0.55rem;
+	
+}
+#contextmenu button{
+	padding: 8px 8px;
+	position:absolute;
+	top: 82%;
+	width: 8%;
+	float:right;
+	outline: 1px solid black;
+}
+
+
 #topbar {
   position: fixed;
   top: 0;
@@ -40,6 +66,7 @@ body {
   background-color: #334d41;
   padding: 0.25rem;
   text-align: center;
+  color: white;
 }
 #topbar button {
   background: none;
