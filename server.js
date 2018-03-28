@@ -15,6 +15,7 @@ app.set('port', 5000);
 app.use('/static', express.static(__dirname + '/static'));
 app.use('/dist', express.static(__dirname + '/dist'));
 app.use('/', express.static(__dirname));
+
 // Routing
 app.get('/', function(request, response) {
   response.sendFile(path.join(__dirname, 'index.html'));
@@ -29,7 +30,11 @@ server.listen(5000, function() {
 var clients = 0;
 // Add the WebSocket handlers
 io.on('connection', function(socket) {
+	
+	// keep count of clients
 	clients++;
+	
+	// collect & send available room data for menu to be filled
 	var availableRooms = [];
     var rooms = io.sockets.adapter.rooms;
     if (rooms) {
@@ -40,6 +45,9 @@ io.on('connection', function(socket) {
         }
     }
 	io.sockets.emit('avail_rooms',{ description: availableRooms});
+	socket.on('room', function(room) {
+		socket.join(room);
+	});
 	io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
 	socket.on('disconnect', function () {
 		clients--;
